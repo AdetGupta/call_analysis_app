@@ -1,28 +1,31 @@
+import os
 import re
 
-from app.data_processing.preprocessor import DataPreprocessor
+from app.data_processing.processor import DataProcessor
 
 
 def get_profanity_pattern():
     """"
-    Gets all the profane words from data/profanity_words.txt then convert
-    it into a regex pattern. That way it is easy to search for the said
-    pattern in the text files.
+    Gets all the profane words from profanity/profanity_words.txt then convert
+    it into a regex pattern.
     """
-    with open('./data/profanity_words.txt', 'r', encoding='utf-8') as f:
-        PROFANE_WORDS = set(line.strip() for line in f if line.strip())
+    base_dir = os.path.dirname(__file__)
+    file_path = os.path.join(base_dir, 'profanity_words.txt')
+    with open(file_path, 'r', encoding='utf-8') as f:
+        profane_words = set(line.strip() for line in f if line.strip())
 
-    profane_pattern = re.compile(r'\b(' + '|'.join(PROFANE_WORDS) + r')\b', re.IGNORECASE)
+    profane_pattern = re.compile(r'\b(' + '|'.join(profane_words) + r')\b', re.IGNORECASE)
     return profane_pattern
 
-def contains_profanity(text):
+def contains_profanity_regex(text):
     """
+    Input: text(str)
     If there is any match with the profane pattern, return True
     """
     profane_pattern = get_profanity_pattern()
     return bool(profane_pattern.search(text))
 
-def detect_profanity(data: DataPreprocessor):
+def detect_profanity_regex(data: DataProcessor):
     """
     Traverse through a list of conversation between the agent and the customer
     to find if the agent was profane and/or the customer was profane.
@@ -32,8 +35,7 @@ def detect_profanity(data: DataPreprocessor):
     is_customer_profane = False
 
     for conv in data.conversation:
-        print(conv)
-        if contains_profanity(conv['text']):
+        if contains_profanity_regex(conv['text']):
             if conv['speaker'] == 'Agent':
                 is_agent_profane = True
             if conv['speaker'] == 'Customer':
