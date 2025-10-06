@@ -22,8 +22,8 @@ def run():
         d['agent'] += 1 if temp["is_agent_profane"] else 0
         d['customer'] += 1 if temp["is_customer_profane"] else 0
 
-        if temp["is_agent_profane"]:
-            print(data.conversation)
+        # if temp["is_agent_profane"]:
+        #     print(data.conversation)
     print(d)
 
 if __name__ == '__main__':
