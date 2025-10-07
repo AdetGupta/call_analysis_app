@@ -3,10 +3,24 @@ import sys
 from pathlib import Path
 import tempfile
 
+import nltk
+from nltk.data import find
+
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 
 from app.data_processing.processor import DataProcessor
 from app.detections.detect import detect_entity
+
+# For fixing missing downloads during deployment
+def download_if_missing(resource_name):
+    try:
+        find(resource_name)
+    except LookupError:
+        nltk.download(resource_name.split('/')[-1], quiet=True)
+
+# Check and download only if missing
+download_if_missing('tokenizers/punkt')      # for punkt
+download_if_missing('corpora/stopwords')
 
 st.set_page_config(page_title="Upload & Analyze")
 st.title("📁 Upload & Analyze")
