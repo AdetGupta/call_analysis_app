@@ -2,9 +2,8 @@ import os
 from pprint import pprint
 
 from app.data_processing.processor import DataProcessor
-
 from app.detections.privacy_violation.llm import detect_privacy_violation_llm
-from app.detections.privacy_violation.pattern import detect_privacy_violation_pattern
+from app.detections.privacy_violation.pattern import detect_privacy_violation_regex
 from app.detections.profanity.ml import detect_profanity_ml
 from app.detections.profanity.pattern import detect_profanity_regex
 from app.metrics.call_quality import analyze_call_quality
@@ -24,6 +23,9 @@ def profanity_run():
         d_pattern['customer'] += 1 if temp_regex["is_customer_profane"] else 0
         d_ml['agent'] += 1 if temp_ml["is_agent_profane"] else 0
         d_ml['customer'] += 1 if temp_ml["is_customer_profane"] else 0
+        if temp_regex["is_agent_profane"] or temp_regex["is_customer_profane"]:
+            print(data.call_id)
+            break
 
     print(f"regex patter result: {d_pattern}")
     print(f"ML result: {d_ml}")
@@ -33,12 +35,12 @@ def privacy_run():
     i=0
     for filename in os.listdir('All_Conversations_(1)'):
         i += 1
-        if i == 5:
+        if i == 2:
             break
         file_path = os.path.join('All_Conversations_(1)', filename)
         data = DataProcessor(file_path)
         result = detect_privacy_violation_llm(data)
-        result_pattern = detect_privacy_violation_pattern(data)
+        result_pattern = detect_privacy_violation_regex(data)
         if result.get("violation", True):
             violations.append({
                 "call_id": data.call_id,
@@ -57,7 +59,7 @@ if __name__ == '__main__':
     # print(d)
     # print(len(d))
 
-    data = DataProcessor("All_Conversations_(1)/d7bbea61-d739-43fb-a198-ced1b59f9491.json")
-    pprint(analyze_call_quality(data))
+    # data = DataProcessor("All_Conversations_(1)/d7bbea61-d739-43fb-a198-ced1b59f9491.json")
+    # pprint(analyze_call_quality(data))
     profanity_run()
-    privacy_run()
+    # privacy_run()

@@ -48,8 +48,6 @@ def verify_violation(sensitive_indices, verification_indices):
     result = {
         "violation": False,
         "reason": "None",
-        "sensitive": sensitive_indices,
-        "verification": verification_indices
     }
 
     # Case 1: No sensitive info shared -> no violation
@@ -74,7 +72,7 @@ def verify_violation(sensitive_indices, verification_indices):
     return result
 
 
-def detect_privacy_violation_pattern(data: DataProcessor):
+def detect_privacy_violation_regex(data: DataProcessor):
     """
         Detect if Privacy and Compliance Violation.
         Returns a dict with structured results for reporting.
@@ -90,5 +88,5 @@ def detect_privacy_violation_pattern(data: DataProcessor):
 
 if __name__ == '__main__':
     data = DataProcessor("../../../All_Conversations_(1)/2db2965e-54fa-41fa-823b-ed79b943f0b1.json")
-    print(detect_privacy_violation_pattern(data))
+    print(detect_privacy_violation_regex(data))
 

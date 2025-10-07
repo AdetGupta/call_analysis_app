@@ -1,2 +1,3 @@
 .venv/
-.env
+.streamlit/secrets.toml
+app/visualizations/data/prepare_data.py

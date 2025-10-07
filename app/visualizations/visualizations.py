@@ -1,50 +1,27 @@
-import os
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
+import ast
 
-def get_data():
-    base_path = os.path.dirname(__file__)
-    path_to_csv = os.path.join(base_path, "data/call_metrics.csv")
-    df = pd.read_csv(path_to_csv)
-    return df
+# ---------- Data Helpers ----------
 
+def load_data(metrics_path: str, detections_path: str):
+    """Load and merge metrics + detection data."""
+    metrics_df = pd.read_csv(metrics_path)
+    detections_df = pd.read_csv(detections_path)
 
-def generate_bar():
-    df = get_data()
+    def parse_dict_column(col):
+        return col.apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
 
-    # Select columns
-    df_overtalk = df[['Agent_overtalk', 'Customer_overtalk']]
-    df_silence = df[['Agent_silence', 'Customer_silence']]
+    for col in ["profanity_regex", "profanity_ml", "privacy_regex", "privacy_llm"]:
+        detections_df[col] = parse_dict_column(detections_df[col])
 
-    # Create figure with 2 subplots
-    fig, axes = plt.subplots(2, 1, figsize=(15, 10))  # 2 rows, 1 column
+    detections_df["is_profane"] = detections_df["profanity_ml"].apply(
+        lambda x: x.get("is_agent_profane") or x.get("is_customer_profane")
+    )
+    detections_df["privacy_violation"] = detections_df["privacy_llm"].apply(
+        lambda x: x.get("violation")
+    )
 
-    # Plot overtalk
-    df_overtalk.plot(kind='bar', stacked=True, ax=axes[0])
-    axes[0].set_title("Agent vs Customer Overtalk per Call")
-    axes[0].set_ylabel("Percentage")
-    axes[0].set_xticklabels([])  # remove crowded x-ticks
+    merged = metrics_df.merge(detections_df, on="call_id", how="left")
+    return merged
 
-    # Plot silence
-    df_silence.plot(kind='bar', stacked=True, ax=axes[1])
-    axes[1].set_title("Agent vs Customer Silence per Call")
-    axes[1].set_ylabel("Percentage")
-    axes[1].set_xticklabels([])  # remove crowded x-ticks
-
-    plt.tight_layout()  # avoid overlap
-    plt.show()
-
-def generate_box():
-    cols = ['Agent_overtalk', 'Customer_overtalk', 'Agent_silence', 'Customer_silence']
-    df = get_data()
-    sns.boxplot(data=df[cols])
-    plt.title("Distribution of Overtalk and Silence")
-    plt.ylabel("Percentage")
-    plt.show()
-
-
-if __name__ == '__main__':
-    generate_box()
-    generate_bar()
 

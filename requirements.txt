@@ -1,11 +1,11 @@
-transformers
+plotly
+streamlit
+matplotlib
+seaborn
 PyYAML
 nltk
 pandas
 scikit-learn
 joblib
-torch
-torchvision
-llama-cpp-python
 google-genai
 python-dotenv
