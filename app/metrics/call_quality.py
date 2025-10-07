@@ -23,7 +23,7 @@ def calculate_quality(conversation):
     of the call as well as by each speaker.
 
     Args:
-        conversation (list[dict]): A list of utterances with 'speaker', 'stime', and 'etime' keys,
+        conversation: A list of utterances with 'speaker', 'stime', and 'etime' keys,
                                    representing the speaker label and their start/end times.
 
     Returns:
@@ -54,6 +54,7 @@ def compute_call_metrics(total_talk_duration, overall_call, agent, customer):
 
     def percent(value):
         return round((value / total_talk_duration) * 100, 2) if total_talk_duration > 0 else 0.0
+
     metrics = {
         "Overall": {"Overtalk (%)": percent(overall_call["overtalk"]), "Silence (%)": percent(overall_call["silence"]),},
         "Agent": {"Overtalk (%)": percent(agent["overtalk"]), "Silence (%)": percent(agent["silence"])},

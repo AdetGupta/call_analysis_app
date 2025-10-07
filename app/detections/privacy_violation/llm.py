@@ -9,7 +9,6 @@ from app.data_processing.processor import DataProcessor
 def get_client():
     load_dotenv()
     # Access your API key
-    # api_key = os.getenv("GEMINI_API_KEY")
     api_key = st.secrets["GEMINI_API_KEY"]
     client = genai.Client(api_key=api_key)
     return client
@@ -89,14 +88,6 @@ def run_llm_violation_check(conversation_text:str):
 
         # Fallback if no JSON found
         return {"violation": False, "reason": "No JSON object found in LLM output."}
-
-        # print("=== Prompt ===")
-        # print(prompt)
-        # print("=====================")
-        # print("=== LLM Raw Output ===")
-        # print(response.text)
-        # print("=====================")
-        # return ""
 
     except Exception as e:
         print("LLM Error:", e)

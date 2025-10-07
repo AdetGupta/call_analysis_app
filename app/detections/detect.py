@@ -6,6 +6,17 @@ from app.detections.profanity.pattern import detect_profanity_regex
 
 
 def detect_entity(data:DataProcessor, entity, approach):
+    """
+    Detects a specified entity in the conversation data using the chosen approach.
+
+    Parameters:
+        data: DataProcessor instance with conversation data
+        entity: "Profanity Detection" or "Privacy and Compliance Violation"
+        approach: "Pattern Matching" or "Machine Learning"
+
+    Returns:
+        Detection results as a dict, or None if unsupported.
+    """
     if entity == "Profanity Detection":
         if approach == "Pattern Matching":
             return detect_profanity_regex(data)
