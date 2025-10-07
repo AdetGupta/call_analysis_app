@@ -30,16 +30,16 @@ def detect_profanity_regex(data: DataProcessor):
     Traverse through a list of conversation between the agent and the customer
     to find if the agent was profane and/or the customer was profane.
     """
-    data.transform()
+    transformed_conversation = data.transform()
 
     is_agent_profane = False
     is_customer_profane = False
 
-    for conv in data.conversation:
-        if contains_profanity_regex(conv['text']):
-            if conv['speaker'] == 'Agent':
+    for message in transformed_conversation:
+        if contains_profanity_regex(message['text']):
+            if message['speaker'] == 'Agent':
                 is_agent_profane = True
-            if conv['speaker'] == 'Customer':
+            if message['speaker'] == 'Customer':
                 is_customer_profane = True
 
 

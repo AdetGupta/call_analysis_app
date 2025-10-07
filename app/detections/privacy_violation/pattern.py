@@ -1,6 +1,7 @@
 from typing import List
 import re
 from app.data_processing.processor import DataProcessor
+from app.utils.data_utils import get_message_from_speaker
 
 SENSITIVE_PATTERNS = [
     r"\b(balanc|amount|payment|due|owe|bill|account|loan|emi|instal|credit|outstand|settl|clear|receiv)\b.*?(\d+|rs|usd|\$)",
@@ -78,8 +79,8 @@ def detect_privacy_violation_pattern(data: DataProcessor):
         Detect if Privacy and Compliance Violation.
         Returns a dict with structured results for reporting.
     """
-    data.transform()
-    all_agent_messages = data.messages(speaker='agent')
+    transformed_conversation = data.transform()
+    all_agent_messages = get_message_from_speaker(speaker='agent', conversation=transformed_conversation)
 
     sensitive_indices = find_all_sensitive(all_agent_messages)
     verification_indices = find_all_verification(all_agent_messages)
