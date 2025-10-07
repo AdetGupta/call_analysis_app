@@ -20,11 +20,12 @@ def download_if_missing(resource_name):
 
 # Check and download only if missing
 download_if_missing('tokenizers/punkt')      # for punkt
+download_if_missing('tokenizers/punkt_tab')
 download_if_missing('corpora/stopwords')
 
 st.set_page_config(page_title="Upload & Analyze")
 st.title("📁 Upload & Analyze")
-st.write("Upload a JSON or YAML file to see the call metrics and entities.")
+st.write("Upload a JSON or YAML file to see the call metrics and entities")
 
 uploaded_file = st.file_uploader(
     "Upload your JSON or YAML file",
