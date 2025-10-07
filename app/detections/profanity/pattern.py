@@ -30,6 +30,7 @@ def detect_profanity_regex(data: DataProcessor):
     Traverse through a list of conversation between the agent and the customer
     to find if the agent was profane and/or the customer was profane.
     """
+    data.transform()
 
     is_agent_profane = False
     is_customer_profane = False

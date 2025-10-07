@@ -21,18 +21,19 @@ def detect_profanity_ml(data: DataProcessor):
         Traverse through a list of conversation between the agent and the customer
         to find if the agent was profane and/or the customer was profane.
     """
+    data.transform()
     vectorizer, model = load_model()
 
     is_agent_profane = False
     is_customer_profane = False
 
-    for conv in data.conversation:
-        tx = vectorizer.transform([conv['text']])
+    for message in data.conversation:
+        tx = vectorizer.transform([message['text']])
         tx = model.predict(tx)
         if tx[0] == 1:
-            if conv['speaker'] == 'Agent':
+            if message['speaker'] == 'Agent':
                 is_agent_profane = True
-            if conv['speaker'] == 'Customer':
+            if message['speaker'] == 'Customer':
                 is_customer_profane = True
             break
 
