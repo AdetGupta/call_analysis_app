@@ -62,7 +62,12 @@ source .venv/bin/activate   # Mac/Linux
 ```bash
 pip install -r requirements.txt
 ```
-
+4. In the root directory cereate .streamlit/secrets.toml
+   In the secrets.toml file include your gemini_api_key for privacy violation detection using gemini.
+```bash
+GEMINI_API_KEY = "YOUR_API_KEY"
+```
+5. Incase of any nltk missing resources error. Please run the Script.py file, which contains the missing nltk resources.
 ---
 
 ## Usage
